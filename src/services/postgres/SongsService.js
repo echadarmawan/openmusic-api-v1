@@ -51,13 +51,15 @@ class SongsService {
       text: 'SELECT * FROM songs WHERE id = $1',
       values: [id],
     };
-    const result = await this._pool.query(query);
+    // karena kita akan mengambil rows dan rowCount, maka gunakan destructuring object alih-alih membuat variabel result
+    const { rows, rowCount } = await this._pool.query(query);
 
-    if (!result.rows.length) {
+    // gunakan rowCount alih-alih result.rows.length
+    if (!rowCount) {
       throw new NotFoundError('Lagu tidak ditemukan');
     }
 
-    return result.rows[0];
+    return rows[0];
   }
 
   async editSongById(id, { title, year, performer, genre, duration }) {
